@@ -46,7 +46,7 @@ export default {
         {
           test: /\.(jpe?g|png|gif|svg|woff|woff2|eot|ttf)(\?v=[0-9].[0-9].[0-9])?$/,
           loader: 'file?name=[sha512:hash:base64:7].[ext]',
-          exclude: /node_modules\/(?!font-awesome)/
+          exclude: /node_modules\/(?!font-awesome|bootstrap)/
         },
         {
           test: /\.css$/,

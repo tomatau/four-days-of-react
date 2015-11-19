@@ -1,5 +1,6 @@
 @import 'normalize.css/normalize';
 @import 'font-awesome/css/font-awesome.css';
+@import 'bootstrap/dist/css/bootstrap.css';
 
 @import './_fonts';
 @import './_variables';
