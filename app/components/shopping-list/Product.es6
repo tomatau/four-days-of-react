@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
+import { IntlMixin } from 'react-intl';
 import { Label, Badge, Button, Table as BsTable } from 'react-bootstrap';
 
-export const Title = ({ product, soldOut, ...props }) =>
+export const Title = ({ product = {}, soldOut, ...props }) =>
   <h5 style={ { margin: 0 } }
     className='tf-product-list__product_title'
     { ...props }>
@@ -16,36 +17,60 @@ export const Price = ({ product, ...props }) =>
 export const Quantity = ({ quantity, ...props }) =>
   <span { ...props }>{ !!quantity && <Badge>{ quantity }</Badge> }</span>;
 
-export const AddToCartButton = ({ disabled, onClick, ...props }) =>
+export const AddToCartButton = ({ disabled, onClick, children, ...props }) =>
   <Button
     bsSize='xsmall'
     disabled={ disabled }
     onClick={ onClick }
-    { ...props }>
-    Add To Cart
-  </Button>;
+    title={ children }
+    children={ children }
+    { ...props }
+  />;
 
 export const Row = ({ ...props }) =>
   <tr className='tf-product-list__product' { ...props } />;
 
-export const Table = ({ children, ...props }) =>
-  <BsTable bordered striped condensed
-    className='tf-product-list__table'
-    { ...props }>
-    <thead className='tf-product-list__table-head'>
-      <tr>
-        <th>Product Name</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      { children }
-    </tbody>
-  </BsTable>;
+export class Table extends React.Component {
+
+  static contextTypes = {
+    messages: PropTypes.object.isRequired
+  };
+
+  static propTypes = {
+    children: PropTypes.any
+  };
+
+  i18n = IntlMixin.getIntlMessage;
+
+  render() {
+    const { children, ...props } = this.props;
+    return (
+      <BsTable bordered striped condensed
+        className='tf-product-list__table'
+        { ...props }>
+        <thead className='tf-product-list__table-head'>
+          <tr>
+            <th>{ this.i18n('products.listHeaders.name') }</th>
+            <th>{ this.i18n('products.listHeaders.price') }</th>
+            <th>{ this.i18n('products.listHeaders.quantity') }</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          { children }
+        </tbody>
+      </BsTable>
+    );
+  }
+}
 
 export class TableRow extends React.Component {
+
+  static contextTypes = {
+    messages: PropTypes.object.isRequired
+  };
+
+  i18n = IntlMixin.getIntlMessage;
 
   static propTypes = {
     product: PropTypes.object,
@@ -55,6 +80,10 @@ export class TableRow extends React.Component {
       PropTypes.string, PropTypes.number
     ]),
     onClickAdd: PropTypes.func
+  };
+
+  static defaultProps = {
+    product: {}
   };
 
   render() {
@@ -81,6 +110,7 @@ export class TableRow extends React.Component {
           <AddToCartButton
             disabled={ soldOut || !canAddToCart }
             onClick={ onClickAdd }
+            children={ this.i18n('products.addToCartButton') }
           />
         </td>
       </Row>

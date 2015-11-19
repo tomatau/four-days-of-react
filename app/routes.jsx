@@ -9,6 +9,10 @@ export default (
       component={ require('./components/shopping-list/ShopRoute') }
     />
     { generateRoute({
+      paths: ['/checkout'],
+      component: require('./components/shopping-list/CheckoutRoute')
+    }) }
+    { generateRoute({
       paths: ['/', '/users', '/utilisateurs'],
       component: require('./components/users')
     }) }

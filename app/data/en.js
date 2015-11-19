@@ -1,5 +1,14 @@
 export default {
   messages: {
+    products: {
+      pageTitle: 'Product List',
+      listHeaders: {
+        name: 'Product Name',
+        price: 'Price',
+        quantity: 'Quantity'
+      },
+      addToCartButton: 'Add to cart'
+    },
     header: {
       users: 'Users List',
       guides: 'Guides',

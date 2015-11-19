@@ -1,28 +1,47 @@
-import React from 'react';
-import { map } from 'lodash';
-import { mockState } from 'data/mockState';
+import React, { PropTypes } from 'react';
+import { map, get } from 'lodash';
 import { ListGroup } from 'react-bootstrap';
 import * as Cart from './Cart';
+import connect from 'connect-alt';
 
+@connect(state => {
+  return {
+    cartProducts: get(state, 'cart.products')
+  };
+})
 class CartContainer extends React.Component {
+
+  static contextTypes = { flux: PropTypes.object.isRequired };
+
+  static propTypes = {
+    cartProducts: PropTypes.object
+  };
+
+  static defaultProps = {
+    cartProducts: {}
+  };
+
   render() {
+    const { cartProducts } = this.props;
+    const CartStore = this.context.flux.getStore('cart');
+    const ProductsStore = this.context.flux.getStore('products');
     return (
       <div className='tf-cart'>
-        <h3>{ mockState.cartPageTitle }</h3>
+        <h3>{ 'Cart' }</h3>
         <ListGroup>
-          { map(mockState.cart.products, (quantity, id) =>
+          { map(cartProducts, (quantity, id) =>
             (quantity > 0) ? (
               <Cart.ListItem
                 key={ id }
                 quantity={ quantity }
-                product={ mockState.getProductById(id) }
+                product={ ProductsStore.getProductById(id) }
               />
             ) : null
           ) }
         </ListGroup>
         <Cart.Footer
-          cartIsEmpty={ mockState.cartIsEmpty() }
-          totalPrice={ mockState.getTotalPrice() }
+          cartIsEmpty={ CartStore.cartIsEmpty() }
+          totalPrice={ CartStore.getTotalPrice() }
           onClickCheckout={ (e) => console.log(e) }
         />
       </div>

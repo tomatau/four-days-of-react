@@ -47,7 +47,7 @@ class Header extends Component {
 
         {/* React Logo in header */}
         <Link to='/' className='app--logo'>
-          <img src={ reactLogo } alt='react-logo' />
+          <img src={ reactLogo } alt='react-logo' style={ { width: 200 } } />
         </Link>
 
         {/* Links in the navbar */}
@@ -65,6 +65,16 @@ class Header extends Component {
           <li>
             <Link to={ this.i18n('routes.protected') }>
               { this.i18n('header.protected') }
+            </Link>
+          </li>
+          <li>
+            <Link to={ '/shop' }>
+              Shop
+            </Link>
+          </li>
+          <li>
+            <Link to={ '/checkout' }>
+              Checkout
             </Link>
           </li>
         </ul>
