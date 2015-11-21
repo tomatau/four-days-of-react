@@ -29,7 +29,7 @@ describe('Header', () => {
 
   it('should render links correctly', () => {
     const links = TestUtils.findRenderedDOMComponentWithClass(instance, 'app--navbar');
-    links.children.length.should.eql(3);
+    links.children.length.should.eql(5);
   });
 
   it('should render lang picker correctly', () => {
