@@ -37,8 +37,8 @@ class App extends Component {
     flux.getStore('title').unlisten(this.handleTitleChange);
   }
 
-  handleLocaleChange = (i18n) => this.setState({ i18n })
-  handleTitleChange = ({ title }) => document.title = title
+  handleLocaleChange = (i18n) => this.setState({ i18n });
+  handleTitleChange = ({ title }) => document.title = title;
 
   render() {
     const { children } = this.props;
