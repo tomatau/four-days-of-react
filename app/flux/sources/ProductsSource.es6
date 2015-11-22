@@ -14,9 +14,7 @@ const mockData = [
 
 const ProductsSource = {
   fetch: () => new Promise(resolve => {
-    setTimeout(() => {
-      resolve(mockData);
-    }, 500);
+    setTimeout(() => resolve(mockData), 500);
   })
 };
 

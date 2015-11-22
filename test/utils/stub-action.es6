@@ -1,19 +1,20 @@
 import _ from 'lodash';
 
 export default function stubAction(actionClass) {
-  const spies = {
-    start: sinon.spy(),
-    success: sinon.spy(),
-    fail: sinon.spy()
-  };
+  // const spies = {
+  //   start: sinon.spy(),
+  //   success: sinon.spy(),
+  //   fail: sinon.spy()
+  // };
+  const done = () => {};
   Object.assign(actionClass.prototype, {
-    spies,
+    // spies,
     generateActions: sinon.spy(function(...actions) {
       this.actions = _.zipObject(actions, actions.map(() => sinon.spy()));
     }),
     alt: {
-      getActions: sinon.stub().returns(spies),
-      resolve: (promise) => Promise.resolve(promise)
+    //   getActions: sinon.stub().returns(spies),
+      resolve: sinon.spy((promise) => Promise.resolve(promise(done)))
     }
   });
   return actionClass;

@@ -8,13 +8,16 @@ class ProductActions {
   }
 
   async fetchProducts() {
-    try {
-      this.actions.startedFetching();
-      const products = await ProductsSource.fetch();
-      this.actions.setProducts(products);
-    } catch (error) {
-      this.actions.fetchError(error);
-    }
+    this.alt.resolve(async (done) => {
+      try {
+        this.actions.startedFetching();
+        const products = await ProductsSource.fetch();
+        this.actions.setProducts(products);
+      } catch (error) {
+        this.actions.fetchError(error);
+      }
+      return done();
+    });
   }
 }
 

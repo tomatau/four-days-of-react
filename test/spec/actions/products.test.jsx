@@ -1,5 +1,6 @@
 import stubAction from '../../utils/stub-action';
 import { products } from 'flux/actions';
+// import isPromise from 'is-promise';
 import { ProductsSource } from 'flux/sources';
 const ActionsClass = stubAction(products);
 
@@ -19,17 +20,27 @@ describe('Products Actions', ()=> {
   });
 
   describe('Fetch Products', ()=> {
+    beforeEach(()=> {
+      sinon.stub(ProductsSource, 'fetch');
+    });
+
+    afterEach(()=> {
+      ProductsSource.fetch.restore();
+    });
+
+    it('calls resolve with a callback offering a promise', async ()=> {
+      await instance.fetchProducts();
+      instance.alt.resolve.should.have.been.calledOnce;
+      const firstArg = instance.alt.resolve.getCall(0).args[0];
+      firstArg(() => {}).should.be.an.instanceOf(Promise);
+    });
+
     context('When Products Source Rejects', ()=> {
       const error = new Error('test error');
-
       beforeEach(()=> {
-        sinon.stub(ProductsSource, 'fetch').returns(
+        ProductsSource.fetch.returns(
           Promise.reject(error)
         );
-      });
-
-      afterEach(()=> {
-        ProductsSource.fetch.restore();
       });
 
       it('calls fetchError with error', async ()=> {
@@ -44,13 +55,9 @@ describe('Products Actions', ()=> {
       const productsData = [ '1', '2', '3' ];
 
       beforeEach(()=> {
-        sinon.stub(ProductsSource, 'fetch').returns(
+        ProductsSource.fetch.returns(
           Promise.resolve(productsData)
         );
-      });
-
-      afterEach(()=> {
-        ProductsSource.fetch.restore();
       });
 
       it('calls startedFetching', async ()=> {
