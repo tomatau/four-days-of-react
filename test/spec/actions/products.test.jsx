@@ -1,7 +1,7 @@
 import stubAction from '../../utils/stub-action';
 import { products } from 'flux/actions';
-// import isPromise from 'is-promise';
 import { ProductsSource } from 'flux/sources';
+import _ from 'lodash';
 const ActionsClass = stubAction(products);
 
 chai.should();
@@ -12,12 +12,16 @@ describe('Products Actions', ()=> {
     instance = new ActionsClass();
   });
 
-  it('generates setProducts, startedFetching, fetchError', ()=> {
-    const call = instance.generateActions.getCall(0);
-    ['setProducts', 'startedFetching', 'fetchError'].map(a =>
-      call.args.should.include(a)
-    );
+  afterEach(()=> {
+    _.map(instance.spies, s => s.reset());
   });
+
+  ['setProducts', 'startedFetching', 'fetchError'].map(a =>
+    it('generates setProducts, startedFetching, fetchError', ()=> {
+      const call = instance.generateActions.getCall(0);
+      call.args.should.include(a);
+    })
+  );
 
   describe('Fetch Products', ()=> {
     beforeEach(()=> {
@@ -35,6 +39,12 @@ describe('Products Actions', ()=> {
       firstArg(() => {}).should.be.an.instanceOf(Promise);
     });
 
+    it('always calls request start', async ()=> {
+      await instance.fetchProducts();
+      instance.alt.getActions.should.have.been.calledWith('requests');
+      instance.spies.start.should.have.been.calledOnce;
+    });
+
     context('When Products Source Rejects', ()=> {
       const error = new Error('test error');
       beforeEach(()=> {
@@ -48,6 +58,12 @@ describe('Products Actions', ()=> {
         instance.actions.fetchError.should.have.been.calledWith(
           error
         );
+      });
+
+      it('always calls request stop', async ()=> {
+        await instance.fetchProducts();
+        instance.alt.getActions.should.have.been.calledWith('requests');
+        instance.spies.stop.should.have.been.calledOnce;
       });
     });
 
@@ -74,6 +90,12 @@ describe('Products Actions', ()=> {
         await instance.fetchProducts();
         instance.actions.setProducts.should.have.been.calledWith(productsData
         );
+      });
+
+      it('always calls request stop', async ()=> {
+        await instance.fetchProducts();
+        instance.alt.getActions.should.have.been.calledWith('requests');
+        instance.spies.stop.should.have.been.calledOnce;
       });
     });
   });
