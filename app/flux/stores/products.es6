@@ -17,8 +17,8 @@ class ProductsStore {
     this.isPending = true;
   }
 
-  setProducts(products) {
-    this.productList = products;
+  setProducts(productList) {
+    this.productList = productList;
     this.isPending = false;
   }
 

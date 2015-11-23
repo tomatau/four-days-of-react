@@ -3,18 +3,23 @@ import { ProductsSource } from 'flux/sources';
 class ProductActions {
   constructor() {
     this.generateActions(
-      'setProducts', 'startedFetching', 'fetchError'
+      'startedFetching', 'setProducts', 'fetchError'
     );
   }
 
   async fetchProducts() {
-    try {
-      this.actions.startedFetching();
-      const products = await ProductsSource.fetch();
-      this.actions.setProducts(products);
-    } catch (error) {
-      this.actions.fetchError(error);
-    }
+    this.alt.resolve(async (done) => {
+      try {
+        this.actions.startedFetching();
+        this.alt.getActions('requests').start();
+        const products = await ProductsSource.fetch();
+        this.actions.setProducts(products);
+      } catch (error) {
+        this.actions.fetchError(error);
+      }
+      this.alt.getActions('requests').stop();
+      return done();
+    });
   }
 }
 
